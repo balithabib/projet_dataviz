@@ -79,5 +79,43 @@
         <a class="nav-link" href="https://balithabib.github.io/projet_dataviz/pie.html">Pie</a>
     </li>
 </ul>
+
+<div class="container">
+    <script>
+        const URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8VXrHHiap6PN_WHC2lIlU6jbNCAIpNhHL9voXappZmq09dCRrwXq2BliQJtlg4kfFMiwNmraaJqtz/pub?output=csv";
+        const columns = ["bookID", "title", "authors", "average_rating", "isbn", "isbn13", "language_code", "num_pages", "ratings_count", "text_reviews_count", "publication_date", "publisher"]
+        let csv_data;
+        const step = 10;
+        let current_page_max = 9;
+        let current_page_min = 0;
+        const numberItemPerPage = 100;
+        initDataCSV();
+
+        function initDataCSV() {
+            console.log("read data in : ", URL);
+            const q = d3.csv(URL, (error, results) => {
+                if (error) throw error;
+                csv_data = results;
+                console.log(results);
+                drawPie();
+            });
+        }
+
+        function drawPie() {
+            const sort = csv_data.sort((a1, a2) => a2["average_rating"] - a1["average_rating"]);
+            console.log(sort);
+            new d3plus.Pie()
+                .config({
+                    data: sort.slice(1, 10),
+                    groupBy: "title",
+                    value: function (d) {
+                        console.log(d["average_rating"], d["title"]);
+                        return d["average_rating"];
+                    }
+                })
+                .render();
+        }
+    </script>
+</div>
 </body>
 </html>

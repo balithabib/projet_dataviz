@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Goodreads books</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+          crossorigin="anonymous">
+
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3plus.org/js/d3plus-hierarchy.v0.9.full.min.js"></script>
+    <script src="http://d3plus.org/js/d3.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+            crossorigin="anonymous"></script>
+
+    <style type="text/css">
+        .center {
+            display: flex;
+            justify-content: center;
+        }
+
+        ul.pagination {
+            display: inline-block;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul.pagination li {
+            display: inline;
+        }
+
+        ul.pagination li a {
+            color: black;
+            float: left;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: background-color .3s;
+            border: 1px solid #ddd;
+        }
+
+        .pagination li:first-child a {
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+        }
+
+        .pagination li:last-child a {
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+
+        ul.pagination li a.active {
+            background-color: #4CAF50;
+            color: white;
+            border: 1px solid #4CAF50;
+        }
+
+        ul.pagination li a:hover:not(.active) {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link active" href="https://balithabib.github.io/projet_dataviz/home.html">Home</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="https://balithabib.github.io/projet_dataviz/table.html">Table</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="https://balithabib.github.io/projet_dataviz/pie.html">Pie</a>
+    </li>
+</ul>
+<div class="container">
+    <h2>Table</h2>
+    <div class="center">
+        <ul class="pagination" id="pages">
+            <li><a onclick="lastPaging()">«</a></li>
+            <li><a id="page0" onclick="drawTable(0)" class="active">0</a></li>
+            <li><a id="page1" onclick="drawTable(1)">1</a></li>
+            <li><a id="page2" onclick="drawTable(2)">2</a></li>
+            <li><a id="page3" onclick="drawTable(3)">3</a></li>
+            <li><a id="page4" onclick="drawTable(4)">4</a></li>
+            <li><a id="page5" onclick="drawTable(5)">5</a></li>
+            <li><a id="page6" onclick="drawTable(6)">6</a></li>
+            <li><a id="page7" onclick="drawTable(7)">7</a></li>
+            <li><a id="page8" onclick="drawTable(8)">8</a></li>
+            <li><a id="page9" onclick="drawTable(9)">9</a></li>
+            <li><a onclick="nextPaging()">»</a></li>
+        </ul>
+    </div>
+
+    <div class="row center">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>bookID</th>
+                <th>title</th>
+                <th>authors</th>
+                <th>average_rating</th>
+                <th>language_code</th>
+                <th>num_pages</th>
+                <th>ratings_count</th>
+                <th>text_reviews_count</th>
+                <th>publication_date</th>
+                <th>publisher</th>
+            </tr>
+            </thead>
+            <tbody id="tableBody">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8VXrHHiap6PN_WHC2lIlU6jbNCAIpNhHL9voXappZmq09dCRrwXq2BliQJtlg4kfFMiwNmraaJqtz/pub?output=csv";
+        const columns = ["bookID", "title", "authors", "average_rating", "isbn", "isbn13", "language_code", "num_pages", "ratings_count", "text_reviews_count", "publication_date", "publisher"]
+        let csv_data;
+        const step = 10;
+        let current_page_max = 9;
+        let current_page_min = 0;
+        const numberItemPerPage = 100;
+        initDataCSV();
+
+        function initDataCSV() {
+            console.log("read data in : ", URL);
+            const q = d3.csv(URL, (error, results) => {
+                if (error) throw error;
+                csv_data = results;
+                console.log(results);
+                drawTable(0);
+                drawPie();
+            });
+        }
+
+        function drawTable(page) {
+            const inf = page * numberItemPerPage;
+            const sup = page * numberItemPerPage + numberItemPerPage;
+            console.log("page :", inf, sup, csv_data.length);
+            if (csv_data && sup < csv_data.length) {
+                d3.select("#pages").selectAll("a").attr("class", "");
+                d3.select("#page" + page).attr("class", "active");
+                if (csv_data) {
+                    document.getElementById("tableBody").innerHTML = "";
+                    const tr = d3.select("#tableBody")
+                        .selectAll()
+                        .data(csv_data.slice(inf, sup))
+                        .enter()
+                        .append("tr");
+                    tr.append("td").text(d => d["bookID"]);
+                    tr.append("td").text(d => d["title"]);
+                    tr.append("td").text(d => d["authors"]);
+                    tr.append("td").text(d => d["average_rating"]);
+                    tr.append("td").text(d => d["language_code"]);
+                    tr.append("td").text(d => d["num_pages"]);
+                    tr.append("td").text(d => d["ratings_count"]);
+                    tr.append("td").text(d => d["text_reviews_count"]);
+                    tr.append("td").text(d => d["publication_date"]);
+                    tr.append("td").text(d => d["publisher"]);
+                }
+            }
+        }
+
+        function lastPaging() {
+            if (current_page_min - step >= 0) {
+                current_page_max = current_page_min - 1;
+                current_page_min = current_page_max - step + 1;
+                const pages = updatePages();
+                console.log("last paging : ", current_page_max, pages);
+                updatePaging(pages);
+            }
+        }
+
+        function nextPaging() {
+            console.log((current_page_max + step) * numberItemPerPage, csv_data.length);
+            if (csv_data && (current_page_max + step) * numberItemPerPage < csv_data.length) {
+                current_page_min = current_page_max + 1;
+                current_page_max += step;
+                const pages = updatePages();
+                console.log("next paging : ", pages);
+                updatePaging(pages);
+            }
+        }
+
+        function updatePaging(pages) {
+            document.getElementById("pages").innerHTML = "";
+            d3.select("#pages")
+                .selectAll()
+                .data(pages)
+                .enter()
+                .append("li").append("a").on("click", d => {
+                if (d === "«") {
+                    return lastPaging();
+                }
+                if (d === "»") {
+                    return nextPaging();
+                }
+                return drawTable(d);
+            }).attr("id", d => "page" + d)
+                .text(d => d);
+        }
+
+        function updatePages() {
+            let pages = [];
+            pages.push("«")
+            for (let i = current_page_min; i <= current_page_max; i++) {
+                pages.push("" + i);
+            }
+            pages.push("»");
+            return pages;
+        }
+
+        function drawPie() {
+            csv_data.sort()
+            new d3plus.Pie()
+                .config({
+                    data: csv_data,
+                    groupBy: "Race",
+                    value: function (d) {
+                        return d["Population Percentage"];
+                    }
+                })
+                .render();
+        }
+    </script>
+</div>
+</body>
+</html>
