@@ -10,9 +10,6 @@
           integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
           crossorigin="anonymous">
 
-    <script src="https://d3js.org/d3.v4.min.js"></script>
-    <script src="https://d3plus.org/js/d3plus-hierarchy.v0.9.full.min.js"></script>
-    <script src="http://d3plus.org/js/d3.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
             integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
             crossorigin="anonymous"></script>
@@ -25,59 +22,58 @@
             display: flex;
             justify-content: center;
         }
-
-        ul.pagination {
-            display: inline-block;
-            padding: 0;
-            margin: 0;
-        }
-
-        ul.pagination li {
-            display: inline;
-        }
-
-        ul.pagination li a {
-            color: black;
-            float: left;
-            padding: 8px 16px;
-            text-decoration: none;
-            transition: background-color .3s;
-            border: 1px solid #ddd;
-        }
-
-        .pagination li:first-child a {
-            border-top-left-radius: 5px;
-            border-bottom-left-radius: 5px;
-        }
-
-        .pagination li:last-child a {
-            border-top-right-radius: 5px;
-            border-bottom-right-radius: 5px;
-        }
-
-        ul.pagination li a.active {
-            background-color: #4CAF50;
-            color: white;
-            border: 1px solid #4CAF50;
-        }
-
-        ul.pagination li a:hover:not(.active) {
-            background-color: #ddd;
-        }
     </style>
 </head>
 
 <body>
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs" id="navBar">
     <li class="nav-item">
-        <a class="nav-link active" href="https://balithabib.github.io/projet_dataviz/home.html">Home</a>
+        <a class="nav-link active" href="index.html">Home</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="https://balithabib.github.io/projet_dataviz/table.html">Table</a>
+        <a class="nav-link" href="table.html" id="grid">Grid</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="https://balithabib.github.io/projet_dataviz/pie.html">Pie</a>
+        <a class="nav-link" href="pie.html">Pie</a>
     </li>
 </ul>
+
+<div class="container">
+    <h1 class="center">Goodreads books</h1>
+    <p>
+        The primary reason for creating this dataset is the requirement of a good clean dataset of books.
+        Being a bookie myself (see what I did there?) I had searched for datasets on books in kaggle itself - and
+        I found out that while most of the datasets had a good amount of books listed, there were either a) major
+        columns
+        missing or b)
+        grossly unclean data. I mean, you can't determine how good a book is just from a few text reviews, come on! What
+        I
+        needed were numbers,
+        solid integers and floats that say how many people liked the book or hated it, how much did they like it,
+        and stuff like that. Even the good dataset that I found was well-cleaned, it had a number of interlinked files,
+        which increased the hassle. This prompted me to use the Goodreads API to get a well-cleaned dataset,
+        with the promising features only ( minus the redundant ones ), and the result is the dataset you're at now.
+    </p>
+    <h2>Membres de l'équipe</h2>
+    <ul>
+        <li>BALIT Habib</li>
+        <li>MOURAH Amel</li>
+        <li>IFRENE Tinhinane</li>
+        <li>IFRENE Chafia</li>
+    </ul>
+    <h2>Lien important</h2>
+    <ul>
+        <li>
+            <a href="https://docs.google.com/spreadsheets/d/1oTniG1p9lZ39SgdSFmxkNaBblFs1zRMZtvagASx4k2I/edit?usp=sharing">
+                dataset Crunchyroll animes database csv
+            </a>
+        </li>
+        <li>
+            <a href="https://www.kaggle.com/filipefilardi/crunchyroll-anime-ratings">
+                dataset in kaggle
+            </a>
+        </li>
+    </ul>
+</div>
 </body>
 </html>
