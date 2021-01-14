@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Crunchyroll animes database</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+          crossorigin="anonymous">
+
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3plus.org/js/d3plus-hierarchy.v0.9.full.min.js"></script>
+    <script src="http://d3plus.org/js/d3.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <style media="screen">
+        * {
+            box-sizing: border-box;
+        }
+
+
+        #mosViz1 {
+            float: left;
+            width: 525px;
+            text-align: center;
+            overflow: hidden;
+            transition: width 0.2s;
+            line-height: 10px;
+        }
+
+        #mosViz2 {
+            float: left;
+            width: 525px;
+            text-align: center;
+            overflow: hidden;
+            transition: width 0.2s;
+            line-height: 10px;
+        }
+
+
+        .mos {
+            border: 1px solid #ffffff;
+        }
+
+        #mosSingle {
+            float: left;
+            margin-top: 100px;
+            width: 500px;
+            height: 500px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .center {
+            display: flex;
+            justify-content: center;
+        }
+
+        .card-bis {
+            display: flex;
+            justify-content: center;
+            margin: auto;
+        }
+
+        .card-bis:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 2em black;
+        }
+
+        ul.pagination {
+            display: inline-block;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul.pagination li {
+            display: inline;
+        }
+
+        ul.pagination li a {
+            color: black;
+            float: left;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: background-color .3s;
+            border: 1px solid #ddd;
+        }
+
+        .pagination li:first-child a {
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+        }
+
+        .pagination li:last-child a {
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+
+        ul.pagination li a.active {
+            background-color: #4CAF50;
+            color: white;
+            border: 1px solid #4CAF50;
+        }
+
+        ul.pagination li a:hover:not(.active) {
+            background-color: #ddd;
+        }
+
+    </style>
+</head>
+
+<body>
+<ul class="nav nav-tabs" id="navBar">
+    <li class="nav-item">
+        <a class="nav-link active" href="index.html">Home</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="table.html" id="grid">Grid</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="pie.html">Pie</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="mosaic_style.html" id="mosaic">Mosaic</a>
+    </li>
+</ul>
+
+    <div id="mosViz1" class="col-lg-2"></div>
+    <div id="mosSingle" class="col-lg-2"></div>
+    <div id="mosViz2" class="col-lg-2"></div>
+
+
+<script type="text/javascript">
+    const URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTDwe5e0OwoIsgBe_pbRqdvDtqLErvhZTxQQKKuI7T6PqP2eMV69RbxDbk0GqBguoK5d3pfmOPQi-Ba/pub?gid=1704519215&single=true&output=csv";
+    let csv_data;
+
+    d3.select("#navBar").selectAll("a").attr("class", "nav-link");
+    d3.select("#mosaic").attr("class", "nav-link active");
+
+    initDataCSV();
+
+    function initDataCSV() {
+        console.log("read data in : ", URL);
+        const q = d3.csv(URL, (error, results) => {
+            if (error) throw error;
+            csv_data = results;
+            console.log(results);
+
+            for (let i = 0; i < csv_data.length / 2; i++) {
+                const d = csv_data[i];
+                let split = d["anime_img"].split("/");
+                const filename = "images/" + split[split.length - 1].replace('.jpg', '.jpeg');
+                var mosSize = 30;
+                var mosViz = '<img class="mos"' +
+                    ' src="' + filename + '"' +
+                    ' style="width:' + mosSize + 'px; height:' + mosSize + 'px;"' +
+                    ' name="' + d["anime"] + '">';
+
+
+                $('#mosViz1').append(mosViz);
+
+                $('.mos').mouseenter(function (e) {
+                    $(this).css('border', '2px solid chartreuse');
+                    var mom = $(this).attr('src');
+                    $('#mosSingle').html('<img src="' + mom + '" width="300">');
+                });
+
+                $('.mos').mouseleave(function () {
+                    $(this).css('border', '2px solid #ffffff');
+                });
+            }
+            for (let i = csv_data.length / 2; i < csv_data.length; i++) {
+                const d = csv_data[i];
+                let split = d["anime_img"].split("/");
+                const filename = "images/" + split[split.length - 1].replace('.jpg', '.jpeg');
+                var mosSize = 30;
+                var mosViz = '<img class="mos"' +
+                    ' src="' + filename + '"' +
+                    ' style="width:' + mosSize + 'px; height:' + mosSize + 'px;"' +
+                    ' name="' + d["anime"] + '">';
+
+
+                $('#mosViz2').append(mosViz);
+
+                $('.mos').mouseenter(function (e) {
+                    $(this).css('border', '2px solid chartreuse');
+                    var mom = $(this).attr('src');
+                    $('#mosSingle').html('<img src="' + mom + '" width="300">');
+                });
+
+                $('.mos').mouseleave(function () {
+                    $(this).css('border', '2px solid #ffffff');
+                });
+            }
+        });
+    }
+</script>
+</body>
+</html>
