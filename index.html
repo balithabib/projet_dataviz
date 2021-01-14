@@ -34,7 +34,13 @@
         <a class="nav-link" href="table.html" id="grid">Grid</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="pie.html">Pie</a>
+        <a class="nav-link" href="pie.html">BubbleChart</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="barre.html" id="bar">BarChart</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="com.html" id="com">PieChart</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="mosaic_style.html">Mosaic</a>
@@ -43,29 +49,37 @@
         <a class="nav-link" href="scatter_preview.html">Scatter</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="barre.html" id="bar">Barchart</a>
+        <a class="nav-link" href="back.html" id="back">TreeMap</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="back.html" id="back">TreeMap</a>
+        <a class="nav-link" href="diagram.html" id="circle">Circle</a>
     </li>
 </ul>
 
 <div class="container">
-    <h1 class="center">Goodreads books</h1>
-    <p>
-        The primary reason for creating this dataset is the requirement of a good clean dataset of books.
-        Being a bookie myself (see what I did there?) I had searched for datasets on books in kaggle itself - and
-        I found out that while most of the datasets had a good amount of books listed, there were either a) major
-        columns
-        missing or b)
-        grossly unclean data. I mean, you can't determine how good a book is just from a few text reviews, come on! What
-        I
-        needed were numbers,
-        solid integers and floats that say how many people liked the book or hated it, how much did they like it,
-        and stuff like that. Even the good dataset that I found was well-cleaned, it had a number of interlinked files,
-        which increased the hassle. This prompted me to use the Goodreads API to get a well-cleaned dataset,
-        with the promising features only ( minus the redundant ones ), and the result is the dataset you're at now.
-    </p>
+    <h1 class="center">Dessin animé: les meilleurs à voir, notre sélection dénicher pour vous!</h1>
+    <br>
+    <img src="background.jpeg" style="display:flex;margin:auto;width: 80%;height: 50%">
+    <br><br>
+    <h4 class="center">Fan de dessin animer ?</h4>
+    <h4 class="center">Vous êtes à la recherche d'une bonne série et vou savez ou commencer ?</h4>
+    <h4 class="center">Jeter un cou d'œil sur les ce qu'on vous a dénicher selon les meilleurs critères de notation </h4>
+    <br><br>
+    <h6>Cet ensemble de données représente tous les animes explorés à partir de Crunchyroll dans ce référentiel , contenant sa note, le nombre de votes et le genre.</h6>
+    <br>
+    <h6>Colonnes :</h6>
+    <ul>
+        <li>anime - nom anglais de l'anime</li>
+        <li>anime_url - URL d'anime sur Crunchyroll</li>
+        <li>anime_img - URL d'image d'anime hébergée par Crunchyroll</li>
+        <li>episodes - nombre d'épisodes hébergés par Crunchyroll de l'anime</li>
+        <li>votes - nombre de votes de l'anime</li>
+        <li>weight - la somme des étoiles notées reçues de l'anime</li>
+        <li>rate - une note moyenne sur 5 étoiles de l'anime</li>
+        <li>genre - 29 genres différents de l'anime, pour chaque genre avec 1 ou 0; action|adventure|comedy|drama|family|fantasy|food|harem|historical|horror|idols|isekai|jdrama|magical girls|martial arts|mecha|music|mystery|post-apocalyptic|romance|sci-fi|seinen|sgdrama|shojo|shonen|slice of life|sports|supernatural|thriller</li>
+    </ul>
+
+
     <h2>Membres de l'équipe</h2>
     <ul>
         <li>BALIT Habib</li>
@@ -83,6 +97,11 @@
         <li>
             <a href="https://www.kaggle.com/filipefilardi/crunchyroll-anime-ratings">
                 dataset in kaggle
+            </a>
+        </li>
+        <li>
+            <a href="https://github.com/balithabib/projet_dataviz">
+                code source
             </a>
         </li>
     </ul>

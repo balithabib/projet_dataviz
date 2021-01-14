@@ -87,7 +87,10 @@
         <a class="nav-link" href="table.html" id="grid">Grid</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="pie.html">Pie</a>
+        <a class="nav-link" href="pie.html">BubbleChart</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="barre.html" id="bar">BarChart</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="mosaic_style.html">Mosaic</a>
@@ -96,10 +99,10 @@
         <a class="nav-link" href="scatter_preview.html">Scatter</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="barre.html" id="bar">Barchart</a>
+        <a class="nav-link" href="back.html" id="back">TreeMap</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="back.html" id="back">TreeMap</a>
+        <a class="nav-link" href="diagram.html" id="circle">Circle</a>
     </li>
 </ul>
 <div class="container">
@@ -169,7 +172,7 @@
 
                 var cards = d3.select('#cards')
                     .selectAll(".col-4")
-                    .data(csv_data).enter()
+                    .data(csv_data.slice(inf, sup)).enter()
                     .append('div').attr('class', 'col-sm-3 mb-12').style('margin-bottom', '10px')
                     .append("div").attr('class', 'card card-bis');
                 cards

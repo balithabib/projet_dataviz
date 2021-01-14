@@ -24,7 +24,8 @@
     <style type="text/css">
         .center {
             display: flex;
-            justify-content: center;
+            margin: auto;
+            text-align: center;
         }
 
         ul.pagination {
@@ -71,13 +72,19 @@
 <body>
 <ul class="nav nav-tabs" id="navBar">
     <li class="nav-item">
-        <a class="nav-link active" href="index.html" id="home">Home</a>
+        <a class="nav-link active" href="index.html">Home</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="table.html" id="grid">Grid</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="pie.html" id="pie">Pie</a>
+        <a class="nav-link" href="pie.html" id="pie">BubbleChart</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="barre.html" id="bar">BarChart</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="com.html" id="com">PieChart</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="mosaic_style.html">Mosaic</a>
@@ -86,68 +93,71 @@
         <a class="nav-link" href="scatter_preview.html">Scatter</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="barre.html" id="bar">Barchart</a>
+        <a class="nav-link" href="back.html" id="back">TreeMap</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="back.html" id="back">TreeMap</a>
+        <a class="nav-link" href="diagram.html" id="circle">Circle</a>
     </li>
 </ul>
 <div class="container">
-    <script>
-        const URL = "data/animes_version_final.csv";
-        const columns = ["anime", "anime_url", "anime_img", "episodes", "votes", "weight", "rate", "rate_1", "rate_2", "rate_3", "rate_4", "rate_5", "genre_action", "genre_adventure", "genre_comedy", "genre_drama", "genre_family", "genre_fantasy", "genre_food", "genre_harem", "genre_historical", "genre_horror", "genre_idols", "genre_isekai", "genre_jdrama", "genre_magical girls", "genre_martial arts", "genre_mecha", "genre_music", "genre_mystery", "genre_post-apocalyptic", "genre_romance", "genre_sci-fi", "genre_seinen", "genre_sgdrama", "genre_shojo", "genre_shonen", "genre_slice of life", "genre_sports", "genre_supernatural", "genre_thriller"]
-        let csv_data;
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status" id="spinner2">
+            <span class="sr-only"></span>
+        </div>
+    </div>
+    <div class="row center">
+        <h1>Top 10 selon le nombre de votants</h1>
+        <h6>Ce BubbleChart représente les 10 premiers animes selon le nombre de votants</h6>
+    </div>
 
-        d3.select("#navBar").selectAll("a").attr("class", "nav-link");
-        d3.select("#pie").attr("class", "nav-link active");
-
-        initDataCSV();
-
-        function initDataCSV() {
-            console.log("read data in : ", URL);
-            const q = d3.csv(URL, (error, results) => {
-                if (error) throw error;
-                csv_data = results;
-                console.log(results);
-                drawBubble();
-            });
-        }
-
-        function drawPie() {
-            let data = [];
-            console.log(csv_data);
-            csv_data.slice(0, 10).forEach(anime => {
-                data.push({id: anime["anime"], x: anime["anime"], y: Number(anime["weight"])});
-            });
-            console.log(data);
-            new d3plus.BarChart()
-                .data(data)
-                .render();
-        }
-
-        function drawBubble() {
-            let data = [];
-            console.log(csv_data);
-            let i = 0;
-            csv_data.slice(0, 10).forEach(anime => {
-                data.push({
-                    id: anime["anime"],
-                    x: i++,
-                    y: Number(anime["weight"]),
-                    value: Number(anime["votes"])
-                });
-            });
-
-            console.log(data);
-            new d3plus.Plot()
-                .data(data)
-                .groupBy("id")
-                .size("value")
-                .sizeMin(20)
-                .sizeMax(100)
-                .render();
-        }
-    </script>
 </div>
+<script>
+    const URL = "data/animes_version_final.csv";
+    const columns = ["anime", "anime_url", "anime_img", "episodes", "votes", "weight", "rate", "rate_1", "rate_2", "rate_3", "rate_4", "rate_5", "genre_action", "genre_adventure", "genre_comedy", "genre_drama", "genre_family", "genre_fantasy", "genre_food", "genre_harem", "genre_historical", "genre_horror", "genre_idols", "genre_isekai", "genre_jdrama", "genre_magical girls", "genre_martial arts", "genre_mecha", "genre_music", "genre_mystery", "genre_post-apocalyptic", "genre_romance", "genre_sci-fi", "genre_seinen", "genre_sgdrama", "genre_shojo", "genre_shonen", "genre_slice of life", "genre_sports", "genre_supernatural", "genre_thriller"]
+    let csv_data;
+
+    d3.select("#navBar").selectAll("a").attr("class", "nav-link");
+    d3.select("#pie").attr("class", "nav-link active");
+
+    initDataCSV();
+
+    function initDataCSV() {
+        console.log("read data in : ", URL);
+        const q = d3.csv(URL, (error, results) => {
+            if (error) throw error;
+            csv_data = results;
+            console.log(results);
+            drawBubble();
+        });
+    }
+
+    function drawBubble() {
+        let data = [];
+        console.log(csv_data);
+        let i = 0;
+        csv_data.sort((anime1, anime2) => Number(anime2["votes"]) - Number(anime1["votes"])).slice(0, 10).forEach(anime => {
+            data.push({
+                id: anime["anime"],
+                x: i++,
+                y: Number(anime["votes"]),
+                value: Number(anime["votes"])
+            });
+        });
+
+        console.log(data);
+        new d3plus.Plot()
+            .data(data)
+            .groupBy("id")
+            .size("value")
+            .sizeMin(20)
+            .sizeMax(100)
+            .render();
+        hideSpinners();
+    }
+
+    function hideSpinners() {
+        document.getElementById("spinner2").style.display = "none";
+    }
+</script>
 </body>
 </html>

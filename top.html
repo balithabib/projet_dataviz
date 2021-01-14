@@ -15,7 +15,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
             integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
             crossorigin="anonymous"></script>
-
+    <script src="https://d3plus.org/js/d3plus-network.v0.6.full.min.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
@@ -83,9 +83,6 @@
         <a class="nav-link" href="barre.html" id="bar">BarChart</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="com.html" id="com">PieChart</a>
-    </li>
-    <li class="nav-item">
         <a class="nav-link" href="mosaic_style.html">Mosaic</a>
     </li>
     <li class="nav-item">
@@ -99,6 +96,19 @@
     </li>
 </ul>
 <div class="container">
+    <div class="col-lg-4" id="top1"></div>
+    <div class="col-lg-4" id="top2"></div>
+    <div class="col-lg-4" id="top3"></div>
+
+    <div class="col-lg-4" id="top4"></div>
+    <div class="col-lg-4" id="top5"></div>
+    <div class="col-lg-4" id="top6"></div>
+
+    <div class="col-lg-4" id="top7"></div>
+    <div class="col-lg-4" id="top8"></div>
+    <div class="col-lg-4" id="top9"></div>
+
+    <div class="col-lg-4" id="top10"></div>
 </div>
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -106,6 +116,7 @@
     const URL = "data/animes_version_final.csv";
     const columns = ["anime", "anime_url", "anime_img", "episodes", "votes", "weight", "rate", "rate_1", "rate_2", "rate_3", "rate_4", "rate_5", "genre_action", "genre_adventure", "genre_comedy", "genre_drama", "genre_family", "genre_fantasy", "genre_food", "genre_harem", "genre_historical", "genre_horror", "genre_idols", "genre_isekai", "genre_jdrama", "genre_magical girls", "genre_martial arts", "genre_mecha", "genre_music", "genre_mystery", "genre_post-apocalyptic", "genre_romance", "genre_sci-fi", "genre_seinen", "genre_sgdrama", "genre_shojo", "genre_shonen", "genre_slice of life", "genre_sports", "genre_supernatural", "genre_thriller"]
     let csv_data;
+    const genre_columns = "action|adventure|comedy|drama|family|fantasy|food|harem|historical|horror|idols|isekai|jdrama|magical girls|martial arts|mecha|music|mystery|post-apocalyptic|romance|sci-fi|seinen|sgdrama|shojo|shonen|slice of life|sports|supernatural|thriller".split("|");
 
     d3.select("#navBar").selectAll("a").attr("class", "nav-link");
     d3.select("#circle").attr("class", "nav-link active");
@@ -117,26 +128,45 @@
         const q = d3.csv(URL, (error, results) => {
             if (error) throw error;
             csv_data = results;
+            let sort = csv_data.sort((anime1, anime2) => Number(anime2["weight"]) - Number(anime1["weight"])).slice(0, 10);
+            console.log(sort);
             let myData = [];
-            csv_data.forEach(anime => {
-                myData.push({
-                    parent: anime["anime"],
-                    id: anime["anime"],
-                    value: anime["episodes"],
-                    image: anime["anime_img"]
-                });
+
+            sort.forEach(anime => {
+                let genres = "";
+                let genre = anime["genre"].split('');
+                for (let i = 0; i < genre.length; i++) {
+                    if (genre[i] === "1") {
+                        genres = genre_columns[i] + ", ";
+                    }
+                }
+                myData.push([
+                    {source: anime["anime"], target: anime["episodes"], image: anime["anime_img"]},
+                    {source: anime["anime"], target: anime["votes"], image: anime["anime_img"]},
+                    {source: anime["anime"], target: anime["rate"], image: anime["anime_img"]},
+                    {source: anime["anime"], target: genres},
+                ]);
             });
 
-            new d3plus.Pack()
-                .data(myData)
-                .groupBy(["parent"])
-                .label(d => d.id + "\n" + d.value + " episodes")
-                .sum("value")
-                .render();
+
+            let a = [];
+            myData.forEach(value => {
+                a.push(new d3plus.Rings()
+                    .links(value)
+                    .label(d => d.id)
+                    .center(value[0].source)
+                    .render());
+            });
+
+            for (let i = 1; i <= 10; i++) {
+                d3.select("#top" + i)
+                    .call(myData[i])
+            }
 
 
         });
     }
+
 </script>
 
 </body>
