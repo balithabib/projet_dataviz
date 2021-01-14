@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Crunchyroll animes database</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3plus.org/js/d3plus-hierarchy.v0.9.full.min.js"></script>
+    <script src="http://d3plus.org/js/d3.min.js"></script>
+    <script src="https://d3js.org/d3-hierarchy.v1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+            crossorigin="anonymous"></script>
+
+    <style type="text/css">
+        .center {
+            display: flex;
+            justify-content: center;
+        }
+
+        ul.pagination {
+            display: inline-block;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul.pagination li {
+            display: inline;
+        }
+
+        ul.pagination li a {
+            color: black;
+            float: left;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: background-color .3s;
+            border: 1px solid #ddd;
+        }
+
+        .pagination li:first-child a {
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+        }
+
+        .pagination li:last-child a {
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+
+        ul.pagination li a.active {
+            background-color: #4CAF50;
+            color: white;
+            border: 1px solid #4CAF50;
+        }
+
+        ul.pagination li a:hover:not(.active) {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+<ul class="nav nav-tabs" id="navBar">
+    <li class="nav-item">
+        <a class="nav-link active" href="index.html" id="home">Home</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="table.html" id="grid">Grid</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="pie.html" id="pie">Pie</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="mosaic_style.html">Mosaic</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="scatter_preview.html">Scatter</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="barre.html" id="bar">Barchart</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="back.html" id="back">TreeMap</a>
+    </li>
+</ul>
+<div class="container">
+    <script>
+        const URL = "data/animes_version_final.csv";
+        const columns = ["anime", "anime_url", "anime_img", "episodes", "votes", "weight", "rate", "rate_1", "rate_2", "rate_3", "rate_4", "rate_5", "genre_action", "genre_adventure", "genre_comedy", "genre_drama", "genre_family", "genre_fantasy", "genre_food", "genre_harem", "genre_historical", "genre_horror", "genre_idols", "genre_isekai", "genre_jdrama", "genre_magical girls", "genre_martial arts", "genre_mecha", "genre_music", "genre_mystery", "genre_post-apocalyptic", "genre_romance", "genre_sci-fi", "genre_seinen", "genre_sgdrama", "genre_shojo", "genre_shonen", "genre_slice of life", "genre_sports", "genre_supernatural", "genre_thriller"]
+        let csv_data;
+
+        d3.select("#navBar").selectAll("a").attr("class", "nav-link");
+        d3.select("#back").attr("class", "nav-link active");
+
+        initDataCSV();
+
+        function initDataCSV() {
+            console.log("read data in : ", URL);
+            const q = d3.csv(URL, (error, results) => {
+                if (error) throw error;
+                csv_data = results;
+                console.log(results);
+                drawBack();
+            });
+        }
+
+        function drawBack() {
+            let data = [];
+            var value = 1;
+            console.log(csv_data);
+            csv_data.forEach(anime => {
+                data.push({id: anime["anime"], value: anime["votes"], image: anime["anime_img"]});
+                value = value + 1;
+            });
+
+            new d3plus.Treemap()
+                .data(data)
+                .groupBy("id")
+                .shapeConfig({
+                    backgroundImage: d => d.image,
+                    label: false,
+                })
+                .sum("value")
+                .render();
+        }
+    </script>
+</div>
+</body>
+
+</html>

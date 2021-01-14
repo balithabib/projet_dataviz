@@ -20,39 +20,39 @@
             integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
             crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <style media="screen">
         * {
             box-sizing: border-box;
         }
 
-
-        #mosViz1 {
-            float: left;
-            text-align: center;
-            overflow: hidden;
-            transition: width 0.2s;
-            line-height: 10px;
+        body {
+            margin: 0;
+            background-color: #ffffff;
         }
 
-        #mosViz2 {
-            float: left;
+        #mosViz {
+            margin: auto;
+            align-content: center;
+            width:1050px;
             text-align: center;
             overflow: hidden;
-            transition: width 0.2s;
             line-height: 10px;
         }
-
-
         .mos {
-            border: 1px solid #ffffff;
+            border: 2px solid #ffffff;
+            position: absolute;
+            cursor: grab;
         }
 
-        #mosSingle {
-            float: left;
-            margin-top: 100px;
-            text-align: center;
-            overflow: hidden;
+        @keyframes grow {
+            0% { transform: scale(1)}
+            100% { transform: scale(8) }
+        }
+        .mos:hover {
+            animation-name: grow;
+            animation-duration: 3s;
+            z-index: 1;
         }
 
         .center {
@@ -128,7 +128,7 @@
         <a class="nav-link" href="mosaic_style.html" id="mosaic">Mosaic</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="scatter_preview.html">Scatter</a>
+        <a class="nav-link" href="scatter_preview.html" id="scatter">Scatter</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="barre.html" id="bar">Barchart</a>
@@ -137,6 +137,7 @@
         <a class="nav-link" href="back.html" id="back">TreeMap</a>
     </li>
 </ul>
+
 <div class="container">
     <div class="d-flex justify-content-center">
         <div class="spinner-border" role="status" id="spinner2">
@@ -144,18 +145,17 @@
         </div>
     </div>
     <div class="row">
-        <div id="mosViz1" class="col-lg-4"></div>
-        <div id="mosSingle" class="col-lg-4"></div>
-        <div id="mosViz2" class="col-lg-4"></div>
+        <div id="mosViz"></div>
     </div>
 </div>
 
+
 <script type="text/javascript">
-    const URL = "data/animes_version_final.csv";
+    const URL = "data/animes_color.csv";
     let csv_data;
 
     d3.select("#navBar").selectAll("a").attr("class", "nav-link");
-    d3.select("#mosaic").attr("class", "nav-link active");
+    d3.select("#scatter").attr("class", "nav-link active");
 
     initDataCSV();
 
@@ -164,66 +164,36 @@
         const q = d3.csv(URL, (error, results) => {
             if (error) throw error;
             csv_data = results;
-            console.log(results);
 
-            d3.csv("data/animes_color.csv", (error, results) => {
-                if (error) throw error;
-                const sort = csv_data.sort((a, b) => {
-                    let split1 = a["anime_img"].split('/');
-                    let split2 = b["anime_img"].split('/');
-                    const a1 = results.find(value => value.filename === split1[split1.length - 1].replace("jpg", "jpeg"));
-                    const a2 = results.find(value => value.filename === split2[split2.length - 1].replace("jpg", "jpeg"));
-                    return parseFloat(a1.hue_median) - parseFloat(a2.hue_median);
+            csv_data.forEach(d => {
+                const filename = "images/" + d.filename;
+                const hue_median = (50 + parseFloat(d.hue_median)) * 5;
+                const saturation_median = (20 + parseFloat(d.saturation_median)) * 2.5;
+
+                $(".mos").draggable();
+                var mosSize = 40;
+                var mosViz = '<img class="mos"' +
+                    ' src="' + filename + '"' +
+                    ' style="width:' + 40 + 'px; height:' + 60 + 'px; left:+' + hue_median + 'px; top:' + saturation_median + 'px;"' +
+                    ' name="' + d.imageID + '">';
+
+
+                $('#mosViz').append(mosViz);
+
+                $('.mos').mouseenter(function (e) {
+                    $(this).css('border', '2px solid chartreuse');
+                    //var mom = $(this).attr('src');
+                    //$('#mosSingle').html('<img src="' + mom + '" width="300">');
                 });
-                for (let i = 0; i < sort.length / 2; i++) {
-                    const d = sort[i];
-                    let split = d["anime_img"].split("/");
-                    const filename = "images/" + split[split.length - 1].replace('.jpg', '.jpeg');
-                    var mosSize = 30;
-                    var mosViz = '<img class="mos"' +
-                        ' src="' + filename + '"' +
-                        ' style="width:' + mosSize + 'px; height:' + mosSize + 'px;"' +
-                        ' name="' + d["anime"] + '">';
 
-                    $('#mosViz1').append(mosViz);
-
-                    $('.mos').mouseenter(function (e) {
-                        $(this).css('border', '2px solid chartreuse');
-                        var mom = $(this).attr('src');
-                        $('#mosSingle').html('<img src="' + mom + '" width="300">');
-                    });
-
-                    $('.mos').mouseleave(function () {
-                        $(this).css('border', '2px solid #ffffff');
-                    });
-                }
-                for (let i = sort.length / 2; i < sort.length; i++) {
-                    const d = sort[i];
-                    let split = d["anime_img"].split("/");
-                    const filename = "images/" + split[split.length - 1].replace('.jpg', '.jpeg');
-                    var mosSize = 30;
-                    var mosViz = '<img class="mos"' +
-                        ' src="' + filename + '"' +
-                        ' style="width:' + mosSize + 'px; height:' + mosSize + 'px;"' +
-                        ' name="' + d["anime"] + '">';
-
-
-                    $('#mosViz2').append(mosViz);
-
-                    $('.mos').mouseenter(function (e) {
-                        $(this).css('border', '2px solid chartreuse');
-                        var mom = $(this).attr('src');
-                        $('#mosSingle').html('<img src="' + mom + '" width="300">');
-                    });
-
-                    $('.mos').mouseleave(function () {
-                        $(this).css('border', '2px solid #ffffff');
-                    });
-                }
-                hideSpinners();
+                $('.mos').mouseleave(function () {
+                    $(this).css('border', '2px solid #ffffff');
+                });
             });
+            hideSpinners();
         });
     }
+
     function hideSpinners() {
         document.getElementById("spinner2").style.display = "none";
     }

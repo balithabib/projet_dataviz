@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Crunchyroll animes database</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
-          crossorigin="anonymous">
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="https://d3plus.org/js/d3plus-hierarchy.v0.9.full.min.js"></script>
-    <script src="https://d3plus.org/js/d3plus-plot.v0.9.full.min.js"></script>
     <script src="http://d3plus.org/js/d3.min.js"></script>
+    <script src="https://d3js.org/d3-hierarchy.v1.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
             integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
             crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
             crossorigin="anonymous"></script>
@@ -93,61 +93,47 @@
     </li>
 </ul>
 <div class="container">
-    <script>
-        const URL = "data/animes_version_final.csv";
-        const columns = ["anime", "anime_url", "anime_img", "episodes", "votes", "weight", "rate", "rate_1", "rate_2", "rate_3", "rate_4", "rate_5", "genre_action", "genre_adventure", "genre_comedy", "genre_drama", "genre_family", "genre_fantasy", "genre_food", "genre_harem", "genre_historical", "genre_horror", "genre_idols", "genre_isekai", "genre_jdrama", "genre_magical girls", "genre_martial arts", "genre_mecha", "genre_music", "genre_mystery", "genre_post-apocalyptic", "genre_romance", "genre_sci-fi", "genre_seinen", "genre_sgdrama", "genre_shojo", "genre_shonen", "genre_slice of life", "genre_sports", "genre_supernatural", "genre_thriller"]
-        let csv_data;
+</div>
 
-        d3.select("#navBar").selectAll("a").attr("class", "nav-link");
-        d3.select("#pie").attr("class", "nav-link active");
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    const URL = "data/animes_version_final.csv";
+    const columns = ["anime", "anime_url", "anime_img", "episodes", "votes", "weight", "rate", "rate_1", "rate_2", "rate_3", "rate_4", "rate_5", "genre_action", "genre_adventure", "genre_comedy", "genre_drama", "genre_family", "genre_fantasy", "genre_food", "genre_harem", "genre_historical", "genre_horror", "genre_idols", "genre_isekai", "genre_jdrama", "genre_magical girls", "genre_martial arts", "genre_mecha", "genre_music", "genre_mystery", "genre_post-apocalyptic", "genre_romance", "genre_sci-fi", "genre_seinen", "genre_sgdrama", "genre_shojo", "genre_shonen", "genre_slice of life", "genre_sports", "genre_supernatural", "genre_thriller"]
+    let csv_data;
 
-        initDataCSV();
+    d3.select("#navBar").selectAll("a").attr("class", "nav-link");
+    d3.select("#bar").attr("class", "nav-link active");
 
-        function initDataCSV() {
-            console.log("read data in : ", URL);
-            const q = d3.csv(URL, (error, results) => {
-                if (error) throw error;
-                csv_data = results;
-                console.log(results);
-                drawBubble();
-            });
-        }
+    initDataCSV();
 
-        function drawPie() {
-            let data = [];
-            console.log(csv_data);
-            csv_data.slice(0, 10).forEach(anime => {
-                data.push({id: anime["anime"], x: anime["anime"], y: Number(anime["weight"])});
-            });
-            console.log(data);
-            new d3plus.BarChart()
-                .data(data)
-                .render();
-        }
-
-        function drawBubble() {
-            let data = [];
-            console.log(csv_data);
-            let i = 0;
-            csv_data.slice(0, 10).forEach(anime => {
-                data.push({
+    function initDataCSV() {
+        console.log("read data in : ", URL);
+        const q = d3.csv(URL, (error, results) => {
+            if (error) throw error;
+            csv_data = results;
+            let myData = [];
+            csv_data.forEach(anime => {
+                myData.push({
+                    parent: anime["anime"],
                     id: anime["anime"],
-                    x: i++,
-                    y: Number(anime["weight"]),
-                    value: Number(anime["votes"])
+                    value: anime["episodes"],
+                    image: anime["anime_img"]
                 });
             });
 
-            console.log(data);
-            new d3plus.Plot()
-                .data(data)
-                .groupBy("id")
-                .size("value")
-                .sizeMin(20)
-                .sizeMax(100)
+            new d3plus.Pack()
+                .data(myData)
+                .groupBy(["parent"])
+                .label(d => d.id + "\n" + d.value + " episodes")
+                .sum("value")
                 .render();
-        }
-    </script>
-</div>
+
+
+        });
+    }
+</script>
+
 </body>
+
 </html>
+s
