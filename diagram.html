@@ -139,6 +139,10 @@
             new d3plus.Pack()
                 .data(myData)
                 .groupBy(["parent"])
+                .shapeConfig({
+                    backgroundImage: d => d["image"],
+                    fill: "white"
+                })
                 .label(d => d.id + "\n" + d.value + " episodes")
                 .sum("value")
                 .render();
@@ -146,6 +150,7 @@
 
         });
     }
+
     function hideSpinners() {
         document.getElementById("spinner2").style.display = "none";
     }

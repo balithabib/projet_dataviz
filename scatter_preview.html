@@ -28,17 +28,17 @@
 
         body {
             margin: 0;
-            background-color: #ffffff;
         }
 
         #mosViz {
             margin: auto;
             align-content: center;
-            width:1050px;
+            width: 1050px;
             text-align: center;
             overflow: hidden;
             line-height: 10px;
         }
+
         .mos {
             border: 2px solid #ffffff;
             position: absolute;
@@ -46,9 +46,14 @@
         }
 
         @keyframes grow {
-            0% { transform: scale(1)}
-            100% { transform: scale(8) }
+            0% {
+                transform: scale(1)
+            }
+            100% {
+                transform: scale(8)
+            }
         }
+
         .mos:hover {
             animation-name: grow;
             animation-duration: 3s;
@@ -128,10 +133,10 @@
         <a class="nav-link" href="barre.html" id="bar">BarChart</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="mosaic_style.html">Mosaic</a>
+        <a class="nav-link" href="com.html" id="com">PieChart</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="com.html" id="com">PieChart</a>
+        <a class="nav-link" href="mosaic_style.html">Mosaic</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="scatter_preview.html" id="scatter">Scatter</a>
@@ -154,9 +159,9 @@
         <h1>Scatter</h1>
         <h6>Une balade au coeur des mangas</h6>
     </div>
-    <div class="row">
-        <div id="mosViz"></div>
-    </div>
+
+    <div id="mosViz" style="background-color: black;"></div>
+
 </div>
 
 
@@ -177,14 +182,13 @@
 
             csv_data.forEach(d => {
                 const filename = "images/" + d.filename;
-                const hue_median = (50 + parseFloat(d.hue_median)) * 5;
-                const saturation_median = (20 + parseFloat(d.saturation_median)) * 2.5 + 100;
+                const left = (parseFloat(d.hue_median)) * 5 + 6 * parseFloat(d.hue_median);
+                const top = (20 + parseFloat(d.saturation_median)) * 2.5 + 2*parseFloat(d.saturation_median) + 80;
 
                 $(".mos").draggable();
-                var mosSize = 40;
                 var mosViz = '<img class="mos"' +
                     ' src="' + filename + '"' +
-                    ' style="width:' + 40 + 'px; height:' + 60 + 'px; left:+' + hue_median + 'px; top:' + saturation_median + 'px;"' +
+                    ' style="width:' + 40 + 'px; height:' + 50 + 'px; left:+' + left + 'px; top:' + top + 'px;"' +
                     ' name="' + d.imageID + '">';
 
 

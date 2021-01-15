@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Crunchyroll animes database</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
-          crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
             integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
@@ -62,10 +61,17 @@
     <img src="background.jpeg" style="display:flex;margin:auto;width: 80%;height: 50%">
     <br><br>
     <h4 class="center">Fan de dessin animer ?</h4>
-    <h4 class="center">Vous êtes à la recherche d'une bonne série et vou savez ou commencer ?</h4>
-    <h4 class="center">Jeter un cou d'œil sur les ce qu'on vous a dénicher selon les meilleurs critères de notation </h4>
+    <h4 class="center">Vous êtes à la recherche d'une bonne série et vou savez pas ou commencer ?</h4>
+    <h4 class="center">Jeter un cou d'œil sur ce qu'on vous a dénicher selon les meilleurs critères de notation </h4>
+
+
+    <h2>Description</h2>
+    Dans ce projet nous faisant une analyse comparatif entre les déssin animé dominant le marché pour proposer à la fin
+    une selction des Top 10 selon défférent critéres: notation, votes, episodes ...
+
     <br><br>
-    <h6>Cet ensemble de données représente tous les animes explorés à partir de Crunchyroll dans ce référentiel , contenant sa note, le nombre de votes et le genre.</h6>
+    <h6>Cet ensemble de données représente tous les animes explorés à partir de Crunchyroll dans ce référentiel ,
+        contenant sa note, le nombre de votes et le genre.</h6>
     <br>
     <h6>Colonnes :</h6>
     <ul>
@@ -76,9 +82,74 @@
         <li>votes - nombre de votes de l'anime</li>
         <li>weight - la somme des étoiles notées reçues de l'anime</li>
         <li>rate - une note moyenne sur 5 étoiles de l'anime</li>
-        <li>genre - 29 genres différents de l'anime, pour chaque genre avec 1 ou 0; action|adventure|comedy|drama|family|fantasy|food|harem|historical|horror|idols|isekai|jdrama|magical girls|martial arts|mecha|music|mystery|post-apocalyptic|romance|sci-fi|seinen|sgdrama|shojo|shonen|slice of life|sports|supernatural|thriller</li>
+        <li>genre - 29 genres différents de l'anime, pour chaque genre avec 1 ou 0;<br>
+            action|adventure|comedy|drama|family|fantasy|food|harem|historical|horror|idols|isekai|jdrama|magical
+            girls|martial arts|mecha|music|mystery|post-apocalyptic|romance|sci-fi|seinen|sgdrama|shojo|shonen|slice of
+            life|sports|supernatural|thriller
+        </li>
     </ul>
 
+
+    <h2>Nettoyage des données</h2>
+    <img src="plan.png" style="display:flex;margin:auto;width: 30%;height: 30%">
+    <br><br>
+    <p>Nous avons eu besoin de nettoyer les données extraite sur kaggle pour correspondre a nos besoins d'étude</p>
+    <p>Pour cela nous avons : </p>
+    <ul>
+        <li>Supprimer les déssin animé qui ont 0 episodes</li>
+        <li>Supprimer les déssin animé sans images</li>
+        <li>Concatiner le genre du déssin animé dans une seule cellule</li>
+        <li>Normaliser le nombres d'épisodes, nombre de votes et de critique</li>
+    </ul>
+
+    <h2>Prototypes de visualisation utilisé</h2>
+    <p>Nous avons utiliser D3plus, une bibliothèque javascript qui étend D3.js pour permettre des visualisations
+        rapides, simple et représentatif.</p>
+    <ul>
+        <li>Grid</li>
+        <li>BubbleChart</li>
+        <li>BarChart</li>
+        <li>PieChart</li>
+        <li>Mosaic</li>
+        <li>Scatter</li>
+        <li>TreeMap</li>
+    </ul>
+
+    <h2>Difficultés rencontrées</h2>
+
+    <p>Nous n'avons pas eu beaucoup de difficultés dans l'utilisation de D3plus et sa prise en main si ce n'est sa
+        documentation pas trop pratique notamment pour la modification des classe prédéfini et pas assez d'informations
+        dans les forums de discussion. </p>
+    <br>
+
+    <h2>Analyse des résultats</h2>
+    <h4>Top 10 des dessins annimées selon tout les critéres</h4>
+    <ul>
+        <li>Naruto Shippuuden</li>
+        <li>Shugo Chara</li>
+        <li>BLEACH Naruto</li>
+        <li>Naruto</li>
+        <li>Gintama</li>
+        <li>Hayate the Combat Butler!</li>
+        <li>Natsume Yuujinchou</li>
+        <li>Blue Exorcist</li>
+        <li>Durarara!!</li>
+        <li>Time of Eve</li>
+
+    </ul>
+
+    <h2>Liens d'inspération</h2>
+    <p>Nous nous sommes inspiré de ses traveaux suivant qui ont utiliser la meme base de
+        données que la notre.</p>
+    <ul>
+        <li> <a href="https://www.kaggle.com/filipefilardi/eda-animes-crunchyroll/notebook">EDA Animes Crunchyroll</a> </li>
+        <li> <a href="https://www.kaggle.com/kerneler/starter-crunchyroll-animes-database-d85d76b2-0#Introduction">Starter:
+            Crunchyroll animes database </a></li>
+        <li> <a href="https://www.kaggle.com/databeru/what-influences-the-rating-of-animes-more">What Influences the Rating of
+            Animes & More</a></li>
+    </ul>
+
+    <br>
 
     <h2>Membres de l'équipe</h2>
     <ul>
@@ -87,13 +158,10 @@
         <li>IFRENE Tinhinane</li>
         <li>IFRENE Chafia</li>
     </ul>
-    <h2>Lien important</h2>
+
+
+    <h2>Liens important</h2>
     <ul>
-        <li>
-            <a href="https://docs.google.com/spreadsheets/d/1oTniG1p9lZ39SgdSFmxkNaBblFs1zRMZtvagASx4k2I/edit?usp=sharing">
-                dataset Crunchyroll animes database csv
-            </a>
-        </li>
         <li>
             <a href="https://www.kaggle.com/filipefilardi/crunchyroll-anime-ratings">
                 dataset in kaggle
@@ -101,10 +169,11 @@
         </li>
         <li>
             <a href="https://github.com/balithabib/projet_dataviz">
-                code source
+                Dépôt GitHub(data, images, code)
             </a>
         </li>
     </ul>
 </div>
 </body>
+
 </html>

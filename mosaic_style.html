@@ -20,7 +20,7 @@
             integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
             crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
+    <script src="https://use.fontawesome.com/2ddc4a0f9c.js"></script>
     <style media="screen">
         * {
             box-sizing: border-box;
@@ -43,6 +43,34 @@
             line-height: 10px;
         }
 
+        /* Par défaut, une étoile est en gris,
+           avec un padding et un curseur en forme de main. */
+        .fa-star {
+            color: gray;
+            cursor: pointer;
+            padding: 0.0625rem;
+        }
+
+        /* Si elle porte en plus la classe '.gold', elle sera en jaune. */
+        .fa-star.gold {
+            color: #ffdc0f;
+        }
+
+        /* Le parent global '.rating' positionne le groupe des étoiles et le lien en colonne */
+        .rating {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Le groupe '.stars' positionne les étoiles
+             les unes à côté des autres sans espacements. */
+        .stars {
+            display: inline-flex;
+            justify-content: center;
+            font-size: 3em;
+        }
+
 
         .mos {
             border: 1px solid #ffffff;
@@ -50,7 +78,6 @@
 
         #mosSingle {
             float: left;
-            margin-top: 100px;
             text-align: center;
             overflow: hidden;
         }
@@ -143,7 +170,7 @@
         <a class="nav-link" href="diagram.html" id="circle">Circle</a>
     </li>
 </ul>
-<div class="container">
+<div class="container-fluid">
     <div class="d-flex justify-content-center">
         <div class="spinner-border" role="status" id="spinner2">
             <span class="sr-only"></span>
@@ -151,12 +178,12 @@
     </div>
     <div class="row center">
         <h1>Mosaic</h1>
-        <h6>Les images sont trié selon la tainture des images</h6>
+        <h6>Les images sont trié selon la teinture</h6>
     </div>
     <div class="row">
-        <div id="mosViz1" class="col-lg-4"></div>
-        <div id="mosSingle" class="col-lg-4"></div>
-        <div id="mosViz2" class="col-lg-4"></div>
+        <div id="mosViz1" class="col-lg-5"></div>
+        <div id="mosSingle" class="col-lg-2"></div>
+        <div id="mosViz2" class="col-lg-5"></div>
     </div>
 </div>
 
@@ -192,7 +219,7 @@
                     var mosSize = 30;
                     var mosViz = '<img class="mos"' +
                         ' src="' + filename + '"' +
-                        ' style="width:' + mosSize + 'px; height:' + mosSize + 'px;"' +
+                        ' style="width:' + 30 + 'px; height:' + 45 + 'px;"' +
                         ' name="' + d["anime"] + '">';
 
                     $('#mosViz1').append(mosViz);
@@ -200,7 +227,17 @@
                     $('.mos').mouseenter(function (e) {
                         $(this).css('border', '2px solid chartreuse');
                         var mom = $(this).attr('src');
-                        $('#mosSingle').html('<img src="' + mom + '" width="300">');
+                        document.getElementById("mosSingle").innerHTML = "";
+                        d3.select('#mosSingle').append('img').attr('src', mom).attr('width', '300');
+
+                        const ee = csv_data.find(value => {
+                            let split = value["anime_img"].split("/");
+                            const filename = "images/" + split[split.length - 1].replace('.jpg', '.jpeg');
+                            return filename === mom;
+                        });
+                        d3.select('#mosSingle').append('h6').text(ee["anime"]);
+                        d3.select('#mosSingle').append('h6').text(ee["episodes"] + " épisodes");
+                        d3.select('#mosSingle').append('h6').text(ee["rate"]).append('i').attr('className', 'fas fa-star');
                     });
 
                     $('.mos').mouseleave(function () {
@@ -214,7 +251,7 @@
                     var mosSize = 30;
                     var mosViz = '<img class="mos"' +
                         ' src="' + filename + '"' +
-                        ' style="width:' + mosSize + 'px; height:' + mosSize + 'px;"' +
+                        ' style="width:' + 30 + 'px; height:' + 45 + 'px;"' +
                         ' name="' + d["anime"] + '">';
 
 
@@ -223,7 +260,26 @@
                     $('.mos').mouseenter(function (e) {
                         $(this).css('border', '2px solid chartreuse');
                         var mom = $(this).attr('src');
-                        $('#mosSingle').html('<img src="' + mom + '" width="300">');
+                        document.getElementById("mosSingle").innerHTML = "";
+                        d3.select('#mosSingle').append('img').attr('src', mom).attr('width', '300');
+
+                        const ee = csv_data.find(value => {
+                            let split = value["anime_img"].split("/");
+                            const filename = "images/" + split[split.length - 1].replace('.jpg', '.jpeg');
+                            return filename === mom;
+                        });
+                        d3.select('#mosSingle').append('h6').text(ee["anime"]);
+                        d3.select('#mosSingle').append('h6').text(ee["episodes"] + " épisodes");
+                        let aa = "";
+                        for (let i = 1; i <= parseInt(ee["rate"]); i++) {
+                            aa += '<i class="fa fa-star gold"></i>';
+                        }
+                        for (let i = parseInt(ee["rate"]) + 1; i <= 5; i++) {
+                            aa += '<i class="fa fa-star"></i>';
+                        }
+                        const element = '<div class="rating"><div class="stars">' + aa + '</div></div>';
+                        console.log(element);
+                        d3.select('#mosSingle').append('h6').text(ee["rate"]).html(element);
                     });
 
                     $('.mos').mouseleave(function () {
