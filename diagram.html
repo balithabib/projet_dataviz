@@ -24,7 +24,7 @@
     <style type="text/css">
         .center {
             display: flex;
-            justify-content: center;
+            text-align: center;
         }
 
         ul.pagination {
@@ -99,6 +99,15 @@
     </li>
 </ul>
 <div class="container">
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status" id="spinner2">
+            <span class="sr-only"></span>
+        </div>
+    </div>
+    <div class="row center">
+        <h1>Circle Map</h1>
+        <h6>représentation hiérarchiques des mangas selon le nombres d'épisodes</h6>
+    </div>
 </div>
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -133,13 +142,15 @@
                 .label(d => d.id + "\n" + d.value + " episodes")
                 .sum("value")
                 .render();
-
+            hideSpinners();
 
         });
+    }
+    function hideSpinners() {
+        document.getElementById("spinner2").style.display = "none";
     }
 </script>
 
 </body>
 
 </html>
-s
