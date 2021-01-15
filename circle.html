@@ -92,10 +92,10 @@
         <a class="nav-link" href="scatter_preview.html">Scatter</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="back.html" id="back">TreeMap</a>
+        <a class="nav-link" href="treemap.html" id="back">TreeMap</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="diagram.html" id="circle">Circle</a>
+        <a class="nav-link" href="circle.html" id="circle">Circle</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="radar.html" id="radar">Radar</a>
@@ -109,7 +109,7 @@
     </div>
     <div class="row center">
         <h1>Circle Map</h1>
-        <h6>représentation hiérarchiques des mangas selon le nombres d'épisodes, et les generes</h6>
+        <h6>représentation hiérarchiques des mangas selon le nombres d'épisodes, et les genres</h6>
     </div>
 </div>
 
@@ -151,7 +151,7 @@
                 .groupBy(["parent", "id"])
                 .shapeConfig({
                     backgroundImage: d => d["image"],
-                    fill: "white"
+                    fill:"white"
                 })
                 .label(d => d.id + "\n" + d.value + " episodes")
                 .sum("value")
