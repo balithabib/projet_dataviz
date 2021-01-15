@@ -109,7 +109,7 @@
     </div>
     <div class="row center">
         <h1>Circle Map</h1>
-        <h6>représentation hiérarchiques des mangas selon le nombres d'épisodes</h6>
+        <h6>représentation hiérarchiques des mangas selon le nombres d'épisodes, et les generes</h6>
     </div>
 </div>
 
@@ -118,7 +118,8 @@
     const URL = "data/animes_version_final.csv";
     const columns = ["anime", "anime_url", "anime_img", "episodes", "votes", "weight", "rate", "rate_1", "rate_2", "rate_3", "rate_4", "rate_5", "genre_action", "genre_adventure", "genre_comedy", "genre_drama", "genre_family", "genre_fantasy", "genre_food", "genre_harem", "genre_historical", "genre_horror", "genre_idols", "genre_isekai", "genre_jdrama", "genre_magical girls", "genre_martial arts", "genre_mecha", "genre_music", "genre_mystery", "genre_post-apocalyptic", "genre_romance", "genre_sci-fi", "genre_seinen", "genre_sgdrama", "genre_shojo", "genre_shonen", "genre_slice of life", "genre_sports", "genre_supernatural", "genre_thriller"]
     let csv_data;
-
+    const genre_columns = "action|adventure|comedy|drama|family|fantasy|food|harem|historical|horror|idols|isekai|jdrama|magical girls|martial arts|mecha|music|mystery|post-apocalyptic|romance|sci-fi|seinen|sgdrama|shojo|shonen|slice of life|sports|supernatural|thriller".split("|");
+    const numbers = genre_columns.map(value => 0);
     d3.select("#navBar").selectAll("a").attr("class", "nav-link");
     d3.select("#circle").attr("class", "nav-link active");
 
@@ -129,19 +130,25 @@
         const q = d3.csv(URL, (error, results) => {
             if (error) throw error;
             csv_data = results;
+
             let myData = [];
             csv_data.forEach(anime => {
-                myData.push({
-                    parent: anime["anime"],
-                    id: anime["anime"],
-                    value: anime["episodes"],
-                    image: anime["anime_img"]
-                });
+                let genre = anime.genre.split('');
+                for (let i = 0; i < genre.length; i++) {
+                    if (genre[i] === "1") {
+                        myData.push({
+                            parent: genre_columns[i],
+                            id: anime["anime"],
+                            value: anime["episodes"],
+                            image: anime["anime_img"]
+                        });
+                    }
+                }
             });
-
+            console.log(myData);
             new d3plus.Pack()
                 .data(myData)
-                .groupBy(["parent"])
+                .groupBy(["parent", "id"])
                 .shapeConfig({
                     backgroundImage: d => d["image"],
                     fill: "white"
